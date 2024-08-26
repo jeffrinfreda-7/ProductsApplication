@@ -46,6 +46,18 @@ public class ProductService {
 
     }
 
+    public List<String> getDistinctProductTypes() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ProductDetail[] productDetails = restTemplate.getForObject(product_details_url, ProductDetail[].class);
+
+        return Arrays.stream(productDetails)
+                .map(ProductDetail::getProduct_type)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+
 
 
 }

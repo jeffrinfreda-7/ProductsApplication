@@ -18,11 +18,13 @@ public class ProductController {
     @GetMapping("/getProductDetail/{productType}")
     public List<Product> getProductDetail(@PathVariable String productType){
         return productService.getProductDetail(productType);
-
     }
 
 
-
+    @GetMapping("/distinctProduct")
+    public List<String> getDistinctProductTypes() {
+        return productService.getDistinctProductTypes();
+    }
 
 
 
