@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Product List</h1>
+    <div class="form-group">
+        <label for="productType">Product Type:</label>
+        <input type="text" id="productType" class="form-control" placeholder="Enter product type">
+        <button class="btn btn-primary my-2" onclick="fetchProducts()">Get Products</button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Product UID</th>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Measure</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody id="productTableBody">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function fetchProducts() {
+        const productType = document.getElementById('productType').value;
+        fetch(`/product/getProductDetail/${productType}`)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('productTableBody');
+                tableBody.innerHTML = ''; // Clear previous results
+                data.forEach(product => {
+                    const row = `
+                        <tr>
+                            <td>${product.productUid}</td>
+                            <td>${product.productType}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price}</td>
+                            <td>${product.measure}</td>
+                            <td>${product.measureAmount}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error('Error fetching products:', error));
+    }
+</script>
+</body>
+</html>
