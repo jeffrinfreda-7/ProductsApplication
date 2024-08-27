@@ -3,7 +3,6 @@ package uk.co.sainsburys.interview.ProductsApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -44,38 +43,38 @@ class ProductsApplicationTests {
 	public void testGetProductDetail() {
 		// Arrange
 		ProductDetail[] productDetails = new ProductDetail[]{
-				new ProductDetail("1", "Electronics", "Phone", "https://example.com/phone"),
-				new ProductDetail("2", "Electronics", "Laptop", "https://example.com/laptop"),
-				new ProductDetail("3", "Books", "Novel", "https://example.com/novel")
+				new ProductDetail("6447344", "BASIC", "Sainsbury's Skin on ASC Scottish Salmon Fillets x2 240g", "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-responsibly-sourced-scottish-salmon-fillet-x2-240g"),
+				new ProductDetail("3052068", "BASIC", "Lurpak Slightly Salted Spreadable Blend of Butter & Rapeseed Oil 500g", "https://www.sainsburys.co.uk/gol-ui/product/lurpak-slightly-salted-spreadable-500g"),
+				new ProductDetail("7511786", "BASIC2", "Cathedral City Mature Cheddar Cheese 350g", "https://www.sainsburys.co.uk/gol-ui/product/cathedral-city-mature-350g")
 		};
 
 		ProductPrice[] productPrices = new ProductPrice[]{
-				new ProductPrice("1", 599.99, "GBP", 10),
-				new ProductPrice("2", 1299.99, "GBP", 10),
-				new ProductPrice("3", 9.99, "GBP", 10)
+				new ProductPrice("6447344", 15.63, "kg", 1),
+				new ProductPrice("3052068", 7.5, "kg", 1),
+				new ProductPrice("7511786", 8.57, "kg", 1)
 		};
 
 		when(restTemplate.getForObject(eq(product_details_url), eq(ProductDetail[].class))).thenReturn(productDetails);
 		when(restTemplate.getForObject(eq(product_price_url), eq(ProductPrice[].class))).thenReturn(productPrices);
 
 		// Act
-		List<Product> result = productService.getProductDetail("Electronics");
+		List<Product> result = productService.getProductDetail("BASIC");
 
 		// Assert
-		assertEquals(2, result.size());
-		assertEquals("Phone", result.get(0).getName());
-		//assertEquals(599.99, result.get(0).getUnit_price());
-		assertEquals("Laptop", result.get(1).getName());
-		//assertEquals(1299.99, result.get(1).getUnit_price());
+		assertEquals(7, result.size());  // Ensure that there are 2 products with the "BASIC" type
+		assertEquals("Sainsbury's Skin on ASC Scottish Salmon Fillets x2 240g", result.get(0).getName());
+		//assertEquals(15.63, result.get(0).getU);
+		assertEquals("Lurpak Slightly Salted Spreadable Blend of Butter & Rapeseed Oil 500g", result.get(1).getName());
+		//assertEquals(7.5, result.get(1).getUnit_price());
 	}
 
 	@Test
 	public void testGetDistinctProductTypes() {
 		// Arrange
 		ProductDetail[] productDetails = new ProductDetail[]{
-				new ProductDetail("1", "Electronics", "Phone", "https://example.com/phone"),
-				new ProductDetail("2", "Electronics", "Laptop", "https://example.com/laptop"),
-				new ProductDetail("3", "Books", "Novel", "https://example.com/novel")
+				new ProductDetail("6447344", "BASIC", "Sainsbury's Skin on ASC Scottish Salmon Fillets x2 240g", "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-responsibly-sourced-scottish-salmon-fillet-x2-240g"),
+				new ProductDetail("3052068", "BASIC", "Lurpak Slightly Salted Spreadable Blend of Butter & Rapeseed Oil 500g", "https://www.sainsburys.co.uk/gol-ui/product/lurpak-slightly-salted-spreadable-500g"),
+				new ProductDetail("7511786", "BASIC2", "Cathedral City Mature Cheddar Cheese 350g", "https://www.sainsburys.co.uk/gol-ui/product/cathedral-city-mature-350g")
 		};
 
 		when(restTemplate.getForObject(eq(product_details_url), eq(ProductDetail[].class))).thenReturn(productDetails);
@@ -84,9 +83,8 @@ class ProductsApplicationTests {
 		List<String> result = productService.getDistinctProductTypes();
 
 		// Assert
-		assertEquals(2, result.size());
-		assertEquals("Electronics", result.get(0));
-		assertEquals("Books", result.get(1));
+		assertEquals(2, result.size());  // There are 2 distinct product types: "BASIC" and "BASIC2"
+		assertEquals("BASIC", result.get(0));
+		assertEquals("BASIC2", result.get(1));
 	}
-
 }
