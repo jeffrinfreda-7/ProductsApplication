@@ -1,8 +1,10 @@
 pipeline {
-    docker {
-                image 'product-application-pipeline:v1'
-                args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Optional: Mount Docker socket if you need Docker inside Docker
-            }
+    agent {
+        docker {
+            image 'product-application-pipeline:v1'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Optional: Mount Docker socket if you need Docker inside Docker
+        }
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -65,9 +67,8 @@ pipeline {
                             git config --global user.email "jeffrinjfreda@gmail.com"
                             git config --global user.name "jeffrinfreda-7"
                         '''
-                                                // Replace image tag in the deployment file
+                        // Replace image tag in the deployment file
                         sh """
-                            BUILD_NUMBER=${BUILD_NUMBER}
                             sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" k8s-manifests/deployment.yml
                         """
 
