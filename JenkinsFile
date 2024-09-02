@@ -41,6 +41,8 @@ pipeline {
             }
             steps {
                 script {
+                    sh 'apt-get update && apt-get install -y docker.io'
+                    sh 'docker --version'
                     // Build the Docker image from the current directory
                     sh "docker build -t ${DOCKER_IMAGE} ."
 
