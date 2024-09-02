@@ -38,7 +38,7 @@ pipeline {
 
         stage('Build and Push Docker Image') {
             environment {
-                DOCKER_IMAGE = "jeffrinfreda7/product-application-pipeline:${BUILD_NUMBER}" // Ensure this is your Docker Hub username and desired image name
+                DOCKER_IMAGE = "jeffrinfreda7/product-application-pipeline:${BUILD_NUMBER}"
                 REGISTRY_CREDENTIALS = credentials('docker-cred') // Ensure this matches the ID of your Docker Hub credentials in Jenkins
             }
             steps {
@@ -48,7 +48,7 @@ pipeline {
 
                     // Log in to Docker registry and push the image
                     docker.withRegistry('https://index.docker.io/v1/', REGISTRY_CREDENTIALS) {
-                        image.push() // Pushes the image to your Docker Hub account
+                        image.push() // Pushes the image to Docker Hub
                     }
                 }
             }
