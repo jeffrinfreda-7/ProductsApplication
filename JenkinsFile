@@ -1,64 +1,58 @@
 pipeline {
     agent {
         docker {
-            //image 'abhishekf5/maven-abhishek-docker-agent:v1'
             image 'maven:3.8.5-openjdk-17'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Optional: Mount Docker socket if you need Docker inside Docker
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket if Docker commands are needed
         }
     }
     stages {
         stage('Checkout') {
             steps {
-                // Clone the repository from your GitHub URL
+                // Clone the repository from GitHub
                 git branch: 'main', url: 'https://github.com/jeffrinfreda-7/ProductsApplication.git'
             }
         }
 
         stage('Build and Test') {
             steps {
-                sh 'ls -ltr'
+                sh 'ls -ltr' // List files to confirm workspace
                 // Build the project and create a JAR file
-                    sh 'ls -ltr'
-                    sh 'mvn clean package'
+                sh 'mvn clean package'
             }
         }
 
         stage('Static Code Analysis') {
-             environment {
-                 SONAR_URL = "http://18.209.66.147:9000"  // Corrected URL without trailing slashes
-             }
-             steps {
-                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-                     // Removed dir('ProductsApplication') if the POM is in the root
-                     sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-                 }
-             }
-         }
-
-
-        stages {
-                stage('Build and Push Docker Image') {
-                    environment {
-                        DOCKER_IMAGE = "jeffrinfreda7/product-application-pipeline:${BUILD_NUMBER}"
-                        REGISTRY_CREDENTIALS = credentials('docker-cred')
-                    }
-                    steps {
-                        script {
-                            // Build the Docker image from the current directory
-                            sh "docker build -t ${DOCKER_IMAGE} ."
-
-                            // Log in to Docker registry
-                            withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                                sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-                            }
-
-                            // Push the Docker image
-                            sh "docker push ${DOCKER_IMAGE}"
-                        }
-                    }
+            environment {
+                SONAR_URL = "http://18.209.66.147:9000" // Correct URL without trailing slashes
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+                    // Perform static code analysis with SonarQube
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
                 }
             }
+        }
 
+        stage('Build and Push Docker Image') {
+            environment {
+                DOCKER_IMAGE = "jeffrinfreda7/product-application-pipeline:${BUILD_NUMBER}"
+                REGISTRY_CREDENTIALS = credentials('docker-cred')
+            }
+            steps {
+                script {
+                    // Build the Docker image from the current directory
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+
+                    // Log in to Docker registry
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
+                    }
+
+                    // Push the Docker image
+                    sh "docker push ${DOCKER_IMAGE}"
+                }
+            }
+        }
 
         stage('Update Deployment File') {
             environment {
@@ -82,7 +76,7 @@ pipeline {
                         sh """
                             git add k8s-manifests/deployment.yml
                             git commit -m "Update deployment image to version ${BUILD_NUMBER}" || echo "No changes to commit"
-                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
                         """
                     }
                 }
