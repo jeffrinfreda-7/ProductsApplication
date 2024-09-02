@@ -24,17 +24,17 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
-            environment {
-                SONAR_URL = "http://18.209.66.147:9000//"  // Ensure this is your actual SonarQube server URL
-            }
-            steps {
-                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-                    dir('ProductsApplication') {
-                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-                    }
-                }
-            }
-        }
+             environment {
+                 SONAR_URL = "http://18.209.66.147:9000"  // Corrected URL without trailing slashes
+             }
+             steps {
+                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+                     // Removed dir('ProductsApplication') if the POM is in the root
+                     sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+                 }
+             }
+         }
+
 
         stage('Build and Push Docker Image') {
             environment {
