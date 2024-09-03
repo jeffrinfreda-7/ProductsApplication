@@ -63,22 +63,29 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                     script {
-                        // Configure Git
-                        sh '''
-                            git config --global user.email "jeffrinjfreda@gmail.com"
-                            git config --global user.name "jeffrinfreda-7"
-                        '''
-                        // Replace image tag in the deployment file
-                        sh """
-                            sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" k8s-manifests/deployment.yml
-                        """
+                        // Clone the k8s-manifests repository
+                        sh "git clone https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git"
 
-                        // Commit and push changes
-                        sh """
-                            git add k8s-manifests/deployment.yml
-                            git commit -m "Update deployment image to version ${BUILD_NUMBER}" || echo "No changes to commit"
-                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
-                        """
+                        // Navigate to the cloned repository directory
+                        dir(GIT_REPO_NAME) {  // Change: Operate inside the cloned repository directory
+                            // Configure Git
+                            sh '''
+                                git config --global user.email "jeffrinjfreda@gmail.com"
+                                git config --global user.name "jeffrinfreda-7"
+                            '''
+
+                            // Replace image tag in the deployment file
+                            sh """
+                                sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
+                            """
+
+                            // Commit and push changes
+                            sh """
+                                git add deployment.yml
+                                git commit -m "Update deployment image to version ${BUILD_NUMBER}" || echo "No changes to commit"
+                                git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
+                            """
+                        }
                     }
                 }
             }
