@@ -1,7 +1,7 @@
-FROM eclipse-temurin:17-jdk
-
+#FROM eclipse-temurin:17-jdk
+FROM adoptopenjdk/openjdk11:alpine-jre
 # Set the working directory inside the container
-WORKDIR /opt
+WORKDIR /optgir
 
 # Copy the JAR file from the local target directory to /opt in the container
 COPY target/*.jar app.jar
