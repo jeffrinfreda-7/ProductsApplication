@@ -35,6 +35,8 @@ public class ProductDetail {
         return full_url;
     }
 
+    public ProductDetail() {
+    }
 
 
     public ProductDetail(String product_uid, String product_type, String name, String full_url) {

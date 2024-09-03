@@ -41,6 +41,9 @@ public class ProductPrice {
         this.unit_price_measure_amount = unit_price_measure_amount;
     }
 
+    public ProductPrice() {
+    }
+
     public ProductPrice(String product_uid, double unit_price, String unit_price_measure, int unit_price_measure_amount) {
         this.product_uid = product_uid;
         this.unit_price = unit_price;
