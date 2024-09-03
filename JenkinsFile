@@ -1,12 +1,17 @@
 pipeline {
     agent {
         docker {
+            image 'docker:dind'
+        }
+    }
+    /* agent {
+        docker {
               //image 'my-jenkins-with-docker:latest'
               //args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
                 image 'maven:3.8.5-openjdk-17'
                 args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket if Docker commands are needed
         }
-    }
+    } */
     stages {
         stage('Checkout') {
             steps {
