@@ -1,5 +1,6 @@
 #FROM eclipse-temurin:17-jdk
-FROM adoptopenjdk/openjdk11:alpine-jre
+# Use OpenJDK 11 with a slim base image
+FROM openjdk:11-jre-slim
 # Set the working directory inside the container
 WORKDIR /optgir
 
