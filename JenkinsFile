@@ -23,7 +23,7 @@ pipeline {
 
         stage('Static Code Analysis') {
             environment {
-                SONAR_URL = "http://54.242.175.147:9000" // Correct URL without trailing slashes
+                SONAR_URL = "http://54.221.26.66:9000" // Correct URL without trailing slashes
             }
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
