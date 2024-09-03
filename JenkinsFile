@@ -57,7 +57,7 @@ pipeline {
 
         stage('Update Deployment File') {
             environment {
-                GIT_REPO_NAME = "ProductsApplication"
+                GIT_REPO_NAME = "k8s-manifests"
                 GIT_USER_NAME = "jeffrinfreda-7"
             }
             steps {
