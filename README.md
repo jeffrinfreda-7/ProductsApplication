@@ -23,7 +23,7 @@ docker build -t product-application-pipeline:v1 .
 
 docker run -d -p 8081:8081 -t product-application-pipeline:v1
 
- Access the application on http://<ip-address>:8010
+ Access the application on http://ip-address:8081
 
 Steps:
 
