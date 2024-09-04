@@ -11,6 +11,16 @@ and pushed it to Docker Hub for consistent and reliable and deployment across en
 6.Argo CD pull the latest changes from Manifest repository and deployed them to Kubernetes cluster.
 7.Argo CD: Integrated Argo CD with Kubernetes to automate the deployment process, ensuring that any changes pushed to the GitHub repository are seamlessly reflected in our Kubernetes environment.
 
+**Build DOCKER Image**
+
+Using DOCEKER as Agent
+
+docker build -t product-application-pipeline:v1 .
+
+docker run -d -p 8081:8081 -t product-application-pipeline:v1
+
+ Access the application on http://<ip-address>:8010
+
 Steps:
 
 **Step 1 : Create an EC2 instance**
@@ -129,6 +139,9 @@ Using the step from the url
 
 https://argocd-operator.readthedocs.io/en/latest/usage/basics/
 
+
+
+Reference : https://www.youtube.com/watch?v=zZfhAXfBvVA&list=RDCMUCnnQ3ybuyFdzvgv2Ky5jnAA&index=1
 
 
 
