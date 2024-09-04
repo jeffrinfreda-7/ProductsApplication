@@ -1,4 +1,4 @@
-Jenkins Pipeline for Java based application using Maven, SonarQube, Argo CD and Kubernetes
+Jenkins Pipeline for Java 11 Springboot based application using Maven, SonarQube, Argo CD and Kubernetes
 
 ![228301952-abc02ca2-9942-4a67-8293-f76647b6f9d8](https://github.com/user-attachments/assets/35aa8a5d-e9f8-4470-8d1a-620f2bc74598)
 
